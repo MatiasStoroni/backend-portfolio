@@ -5,17 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.matias.backend_portfolio.dtos.request.UserRequestDTO;
-import com.matias.backend_portfolio.dtos.response.UserResponseDTO;
-import com.matias.backend_portfolio.mappers.UserMapper;
 import com.matias.backend_portfolio.models.User;
 import com.matias.backend_portfolio.services.UserService;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -26,31 +25,28 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-
-        List<User> users = userService.getAll();
-
-        List<UserResponseDTO> userDTOs = users.stream()
-                .map(UserMapper::toResponseDTO)
-                .toList();
-
-        return ResponseEntity.ok(userDTOs);
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
-        try {
-            User user = userService.getById(id);
-            UserResponseDTO responseDTO = UserMapper.toResponseDTO(user);
-            return ResponseEntity.ok(responseDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestDTO dto) {
-        User user = userService.create(dto);
-        return ResponseEntity.ok(UserMapper.toResponseDTO(user));
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
+        return ResponseEntity.ok(userService.create(user));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
+        return ResponseEntity.ok(userService.update(id, user));
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

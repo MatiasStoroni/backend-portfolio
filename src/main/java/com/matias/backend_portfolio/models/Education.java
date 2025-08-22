@@ -1,5 +1,7 @@
 package com.matias.backend_portfolio.models;
 
+import java.util.Map;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,28 +16,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "educations")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class User {
+public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    @Size(min = 2, max = 50)
-    @NotNull(message = "Name field is missing")
-    private String name;
-
-    @Column(nullable = false)
     @Size(min = 10, max = 100)
-    @NotNull(message = "Degree field is missing")
-    private String degree;
+    @NotNull(message = "Description field is missing")
+    private String title;
 
     @Column(nullable = false)
-    @Size(min = 10, max = 600)
+    @NotNull(message = "Description field is missing")
+    private int year;
+
+    @Column(nullable = false)
+    @Size(min = 10, max = 1000)
     @NotNull(message = "Description field is missing")
     private String description;
 

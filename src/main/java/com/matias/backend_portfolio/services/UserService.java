@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.matias.backend_portfolio.dtos.request.UserRequestDTO;
-import com.matias.backend_portfolio.mappers.UserMapper;
 import com.matias.backend_portfolio.models.User;
 import com.matias.backend_portfolio.repositories.UserRepository;
 
@@ -23,20 +21,35 @@ public class UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
     public User getById(Long id) {
-        return userRepository.getReferenceById(id);
-    }
-
-    public User create(UserRequestDTO userDto) {
-        User user = UserMapper.toEntity(userDto);
-        return userRepository.save(user);
-    }
-
-    public User update(Long id, UserRequestDTO userDto) {
-        User user = userRepository.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        UserMapper.updateEntityFromDTO(user, userDto);
+    }
+
+    public User create(User user) {
         return userRepository.save(user);
     }
 
+    public User update(Long id, User userUpdates) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        // Only update fields that are provided (non-null)
+        if (userUpdates.getName() != null) {
+            existingUser.setName(userUpdates.getName());
+        }
+        if (userUpdates.getDegree() != null) {
+            existingUser.setDegree(userUpdates.getDegree());
+        }
+
+        return userRepository.save(existingUser);
+    }
+
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("User not found");
+        }
+        userRepository.deleteById(id);
+    }
 }
