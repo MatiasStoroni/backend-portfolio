@@ -15,8 +15,4 @@ public class UserRequestDTO {
     @NotBlank(message = "Name cannot be empty")
     @Size(max = 100, message = "Name cannot exceed 100 characters")
     private String name;
-
-    @NotBlank(message = "Degree cannot be empty")
-    @Size(max = 100, message = "Degree cannot exceed 100 characters")
-    private String degree;
 }
