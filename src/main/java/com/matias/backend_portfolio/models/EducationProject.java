@@ -1,12 +1,12 @@
 package com.matias.backend_portfolio.models;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.matias.backend_portfolio.utils.ListToJsonConverter;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,38 +33,22 @@ public class EducationProject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Project title is required")
+    @Column(nullable = false, length = 100)
     @Size(max = 200, message = "Title cannot exceed 200 characters")
-    @Column(nullable = false, length = 200)
+    @NotBlank(message = "Project title is required")
     private String title;
 
-    @Size(max = 2000, message = "Summary cannot exceed 2000 characters")
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
-    // Store tech stack as comma-separated string
-    @Column(name = "tech_stack")
-    private String techStack;
-
-    // Helper methods for tech stack
-    public List<String> getTechList() {
-        if (techStack == null || techStack.trim().isEmpty()) {
-            return new ArrayList<>();
-        }
-        return Arrays.asList(techStack.split(","));
-    }
-
-    public void setTechList(List<String> techList) {
-        if (techList == null || techList.isEmpty()) {
-            this.techStack = null;
-        } else {
-            this.techStack = String.join(",", techList);
-        }
-    }
+    @Column(name = "tech_stack", columnDefinition = "TEXT")
+    @Convert(converter = ListToJsonConverter.class)
+    private List<String> techStack;
 
     // One-to-One relationship with Education
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_id", nullable = false)
     @JsonIgnore
     private Education education;
+
 }

@@ -34,8 +34,7 @@ public class User {
     @NotNull(message = "Degree field is missing")
     private String degree;
 
-    @Column(nullable = false)
-    @Size(min = 10, max = 600)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @NotNull(message = "Description field is missing")
     private String description;
 

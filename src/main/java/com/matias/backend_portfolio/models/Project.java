@@ -1,12 +1,15 @@
 package com.matias.backend_portfolio.models;
 
-import jakarta.persistence.CascadeType;
+import java.util.List;
+
+import com.matias.backend_portfolio.utils.ListToJsonConverter;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,33 +19,42 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "educations")
+@Table(name = "projects")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Education {
+public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    @Size(min = 10, max = 100)
+    @Size(max = 100)
     @NotNull(message = "Title field is missing")
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    @NotNull(message = "YearCompleted field is missing")
-    private int yearCompleted;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
     @NotNull(message = "Description field is missing")
     private String description;
 
-    @OneToOne(mappedBy = "education", cascade = CascadeType.ALL, orphanRemoval = true)
-    private EducationResource resource;
+    @Column(name = "tech_stack", nullable = false, columnDefinition = "TEXT")
+    @NotNull(message = "TechStack field is missing")
+    @Convert(converter = ListToJsonConverter.class)
+    private List<String> techStack;
 
-    @OneToOne(mappedBy = "education", cascade = CascadeType.ALL, orphanRemoval = true)
-    private EducationProject project;
+    @Column(name = "image_url", nullable = false)
+    @Size(max = 100)
+    @NotNull(message = "ImageUrl field is missing")
+    private String imageUrl;
+
+    @Column(name = "repository_url", nullable = true)
+    @Size(max = 100)
+    private String repositoryUrl;
+
+    @Column(name = "live_demo_url", nullable = true)
+    @Size(max = 100)
+    private String liveDemoUrl;
 
 }
