@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,14 +43,8 @@ public class EducationProject {
     private String summary;
 
     // Store tech stack as comma-separated string
-    @Size(max = 500, message = "Tech stack cannot exceed 500 characters")
-    @Column(name = "tech_stack", length = 500)
-    private String techStack; // e.g., "Java,Next.js,MySQL,Docker,Auth0,Python,AI"
-
-    // One-to-One relationship with Education
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "education_id", nullable = false)
-    private Education education;
+    @Column(name = "tech_stack")
+    private String techStack;
 
     // Helper methods for tech stack
     public List<String> getTechList() {
@@ -65,4 +61,10 @@ public class EducationProject {
             this.techStack = String.join(",", techList);
         }
     }
+
+    // One-to-One relationship with Education
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "education_id", nullable = false)
+    @JsonIgnore
+    private Education education;
 }

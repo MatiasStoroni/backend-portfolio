@@ -1,5 +1,7 @@
 package com.matias.backend_portfolio.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,12 +44,9 @@ public class EducationResource {
     @Column(nullable = false, length = 500)
     private String url;
 
-    @Size(max = 50, message = "Icon cannot exceed 50 characters")
-    @Column(length = 50)
-    private String icon; // Store icon name as string (e.g., "FaGithub")
-
     // One-to-One relationship with Education
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_id", nullable = false)
+    @JsonIgnore
     private Education education;
 }

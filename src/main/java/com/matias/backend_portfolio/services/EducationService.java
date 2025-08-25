@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.matias.backend_portfolio.models.Education;
+import com.matias.backend_portfolio.models.EducationProject;
+import com.matias.backend_portfolio.models.EducationResource;
 import com.matias.backend_portfolio.repositories.EducationRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -28,6 +30,13 @@ public class EducationService {
     }
 
     public Education create(Education education) {
+        // Set bidirectional relationships
+        if (education.getResource() != null) {
+            education.getResource().setEducation(education);
+        }
+        if (education.getProject() != null) {
+            education.getProject().setEducation(education);
+        }
         return educationRepository.save(education);
     }
 
@@ -35,12 +44,29 @@ public class EducationService {
         Education existingEducation = educationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Education not found"));
 
-        // Only update fields that are provided (non-null)
+        // Update education fields
         if (educationUpdates.getTitle() != null) {
             existingEducation.setTitle(educationUpdates.getTitle());
         }
+        if (educationUpdates.getYearCompleted() != 0) {
+            existingEducation.setYearCompleted(educationUpdates.getYearCompleted());
+        }
         if (educationUpdates.getDescription() != null) {
             existingEducation.setDescription(educationUpdates.getDescription());
+        }
+
+        // Update resource if provided
+        if (educationUpdates.getResource() != null) {
+            EducationResource newResource = educationUpdates.getResource();
+            newResource.setEducation(existingEducation);
+            existingEducation.setResource(newResource);
+        }
+
+        // Update project if provided
+        if (educationUpdates.getProject() != null) {
+            EducationProject newProject = educationUpdates.getProject();
+            newProject.setEducation(existingEducation);
+            existingEducation.setProject(newProject);
         }
 
         return educationRepository.save(existingEducation);
