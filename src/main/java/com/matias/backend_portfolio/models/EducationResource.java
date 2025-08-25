@@ -34,11 +34,6 @@ public class EducationResource {
     @Column(nullable = false, length = 50)
     private String type;
 
-    @NotBlank(message = "Resource label is required")
-    @Size(max = 200, message = "Label cannot exceed 200 characters")
-    @Column(nullable = false, length = 200)
-    private String label;
-
     @NotBlank(message = "Resource URL is required")
     @Size(max = 500, message = "URL cannot exceed 500 characters")
     @Column(nullable = false, length = 500)

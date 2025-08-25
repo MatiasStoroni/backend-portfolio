@@ -35,7 +35,7 @@ public class Project {
     @NotNull(message = "Title field is missing")
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @NotNull(message = "Description field is missing")
     private String description;
 
