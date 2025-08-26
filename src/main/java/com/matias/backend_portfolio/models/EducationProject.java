@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,10 +39,14 @@ public class EducationProject {
     @NotBlank(message = "Project title is required")
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 1000, nullable = false)
+    @Size(min = 5, max = 1000, message = "Summary should be beween 5 and 1000 characters")
+    @NotNull(message = "Summary field is missing")
     private String summary;
 
-    @Column(name = "tech_stack", columnDefinition = "TEXT")
+    @Column(length = 1000, name = "tech_stack")
+    @Size(max = 10, message = "TechStack cannot have more than 10 items")
+    @NotNull(message = "TechStack field is missing")
     @Convert(converter = ListToJsonConverter.class)
     private List<String> techStack;
 

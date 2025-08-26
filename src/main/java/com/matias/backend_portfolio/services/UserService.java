@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.matias.backend_portfolio.dtos.UserUpdateDTO;
 import com.matias.backend_portfolio.models.User;
 import com.matias.backend_portfolio.repositories.UserRepository;
 
@@ -31,7 +32,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User update(Long id, User userUpdates) {
+    public User update(Long id, UserUpdateDTO userUpdates) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -41,6 +42,10 @@ public class UserService {
         }
         if (userUpdates.getDegree() != null) {
             existingUser.setDegree(userUpdates.getDegree());
+        }
+
+        if (userUpdates.getDescription() != null) {
+            existingUser.setDescription(userUpdates.getDescription());
         }
 
         return userRepository.save(existingUser);

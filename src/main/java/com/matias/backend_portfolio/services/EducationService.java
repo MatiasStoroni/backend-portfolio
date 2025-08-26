@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.matias.backend_portfolio.dtos.EducationProjectUpdateDTO;
+import com.matias.backend_portfolio.dtos.EducationResourceUpdateDTO;
+import com.matias.backend_portfolio.dtos.EducationUpdateDTO;
+import com.matias.backend_portfolio.mappers.EducationMapper;
 import com.matias.backend_portfolio.models.Education;
-import com.matias.backend_portfolio.models.EducationProject;
-import com.matias.backend_portfolio.models.EducationResource;
 import com.matias.backend_portfolio.repositories.EducationRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +21,9 @@ public class EducationService {
 
     @Autowired
     private EducationRepository educationRepository;
+
+    @Autowired
+    private EducationMapper educationMapper;
 
     public List<Education> getAll() {
         return educationRepository.findAll();
@@ -40,36 +45,53 @@ public class EducationService {
         return educationRepository.save(education);
     }
 
-    public Education update(Long id, Education educationUpdates) {
+    public Education update(Long id, EducationUpdateDTO educationUpdates) {
         Education existingEducation = educationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Education not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Education not found with id: " + id));
 
-        // Update education fields
-        if (educationUpdates.getTitle() != null) {
-            existingEducation.setTitle(educationUpdates.getTitle());
-        }
-        if (educationUpdates.getYearCompleted() != 0) {
-            existingEducation.setYearCompleted(educationUpdates.getYearCompleted());
-        }
-        if (educationUpdates.getDescription() != null) {
-            existingEducation.setDescription(educationUpdates.getDescription());
-        }
+        updateEducationFields(existingEducation, educationUpdates);
+        updateEducationResource(existingEducation, educationUpdates.getResource());
+        updateEducationProject(existingEducation, educationUpdates.getProject());
 
-        // Update resource if provided
-        if (educationUpdates.getResource() != null) {
-            EducationResource newResource = educationUpdates.getResource();
-            newResource.setEducation(existingEducation);
-            existingEducation.setResource(newResource);
-        }
+        Education savedEducation = educationRepository.save(existingEducation);
 
-        // Update project if provided
-        if (educationUpdates.getProject() != null) {
-            EducationProject newProject = educationUpdates.getProject();
-            newProject.setEducation(existingEducation);
-            existingEducation.setProject(newProject);
-        }
+        return savedEducation;
+    }
 
-        return educationRepository.save(existingEducation);
+    private void updateEducationFields(Education education, EducationUpdateDTO dto) {
+        if (dto.getTitle() != null) {
+            education.setTitle(dto.getTitle());
+        }
+        if (dto.getYearCompleted() != null && dto.getYearCompleted() != 0) {
+            education.setYearCompleted(dto.getYearCompleted());
+        }
+        if (dto.getDescription() != null) {
+            education.setDescription(dto.getDescription());
+        }
+    }
+
+    private void updateEducationResource(Education education, EducationResourceUpdateDTO resourceDto) {
+        if (resourceDto != null) {
+            if (education.getResource() == null) {
+                // Business logic: create new resource when needed
+                education.setResource(educationMapper.createResourceFromDto(resourceDto, education));
+            } else {
+                // Business logic: update existing resource
+                educationMapper.updateResourceFields(education.getResource(), resourceDto);
+            }
+        }
+    }
+
+    private void updateEducationProject(Education education, EducationProjectUpdateDTO projectDto) {
+        if (projectDto != null) {
+            if (education.getProject() == null) {
+                // Business logic: create new project when needed
+                education.setProject(educationMapper.createProjectFromDto(projectDto, education));
+            } else {
+                // Business logic: update existing project
+                educationMapper.updateProjectFields(education.getProject(), projectDto);
+            }
+        }
     }
 
     public void delete(Long id) {

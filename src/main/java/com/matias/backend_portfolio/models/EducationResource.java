@@ -29,14 +29,14 @@ public class EducationResource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Resource type is required")
-    @Size(max = 50, message = "Type cannot exceed 50 characters")
     @Column(nullable = false, length = 50)
+    @Size(max = 50, message = "Type cannot exceed 50 characters")
+    @NotBlank(message = "Resource type is required")
     private String type;
 
-    @NotBlank(message = "Resource URL is required")
-    @Size(max = 500, message = "URL cannot exceed 500 characters")
     @Column(nullable = false, length = 500)
+    @Size(max = 500, message = "URL cannot exceed 500 characters")
+    @NotBlank(message = "Resource URL is required")
     private String url;
 
     // One-to-One relationship with Education

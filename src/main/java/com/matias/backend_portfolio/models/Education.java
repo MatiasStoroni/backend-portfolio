@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -31,11 +33,12 @@ public class Education {
     @NotNull(message = "Title field is missing")
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    @NotNull(message = "YearCompleted field is missing")
+    @Min(value = 2015, message = "YearCompleted must be after 2015")
+    @Max(value = 2030, message = "YearCompleted must be before 2030")
     private int yearCompleted;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(length = 5000, nullable = false)
+    @Size(min = 5, max = 5000, message = "Description should be beween 5 and 5000 characters")
     @NotNull(message = "Description field is missing")
     private String description;
 

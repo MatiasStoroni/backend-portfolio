@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.matias.backend_portfolio.dtos.EducationUpdateDTO;
 import com.matias.backend_portfolio.models.Education;
 import com.matias.backend_portfolio.services.EducationService;
 
@@ -43,8 +44,9 @@ public class EducationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEducation(@PathVariable Long id, @Valid @RequestBody Education education) {
-        return ResponseEntity.ok(educationService.update(id, education));
+    public ResponseEntity<?> updateEducation(@PathVariable Long id,
+            @Valid @RequestBody EducationUpdateDTO educationDto) {
+        return ResponseEntity.ok(educationService.update(id, educationDto));
     }
 
     @DeleteMapping("/{id}")
