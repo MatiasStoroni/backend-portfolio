@@ -49,7 +49,7 @@ public class Experience {
     @Convert(converter = ListToJsonConverter.class)
     private List<String> responsibilities;
 
-    @Column(length = 1000) // Increase length for JSON overhead
+    @Column(length = 1000)
     @Size(max = 10, message = "Tools cannot have more than 10 items")
     @Convert(converter = ListToJsonConverter.class)
     private List<String> tools;

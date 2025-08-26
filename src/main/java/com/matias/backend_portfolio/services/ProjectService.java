@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.matias.backend_portfolio.dtos.ProjectUpdateDTO;
 import com.matias.backend_portfolio.models.Project;
 import com.matias.backend_portfolio.repositories.ProjectRepository;
 
@@ -31,7 +32,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Project update(Long id, Project projectUpdates) {
+    public Project update(Long id, ProjectUpdateDTO projectUpdates) {
         Project existingProject = projectRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found"));
 

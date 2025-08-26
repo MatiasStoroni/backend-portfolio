@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.matias.backend_portfolio.dtos.ProjectUpdateDTO;
 import com.matias.backend_portfolio.models.Project;
 import com.matias.backend_portfolio.services.ProjectService;
 
@@ -43,8 +44,8 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable Long id, @Valid @RequestBody Project project) {
-        return ResponseEntity.ok(projectService.update(id, project));
+    public ResponseEntity<?> updateProject(@PathVariable Long id, @Valid @RequestBody ProjectUpdateDTO projectDto) {
+        return ResponseEntity.ok(projectService.update(id, projectDto));
     }
 
     @DeleteMapping("/{id}")
