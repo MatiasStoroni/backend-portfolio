@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.matias.backend_portfolio.dtos.ExperienceUpdateDTO;
 import com.matias.backend_portfolio.models.Experience;
 import com.matias.backend_portfolio.services.ExperienceService;
 
@@ -43,8 +44,9 @@ public class ExperienceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateExperience(@PathVariable Long id, @Valid @RequestBody Experience experience) {
-        return ResponseEntity.ok(experienceService.update(id, experience));
+    public ResponseEntity<?> updateExperience(@PathVariable Long id,
+            @Valid @RequestBody ExperienceUpdateDTO experienceDto) {
+        return ResponseEntity.ok(experienceService.update(id, experienceDto));
     }
 
     @DeleteMapping("/{id}")

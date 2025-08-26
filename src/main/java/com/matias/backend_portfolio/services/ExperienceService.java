@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.matias.backend_portfolio.dtos.ExperienceUpdateDTO;
 import com.matias.backend_portfolio.models.Experience;
 import com.matias.backend_portfolio.repositories.ExperienceRepository;
 
@@ -31,11 +32,11 @@ public class ExperienceService {
         return experienceRepository.save(experience);
     }
 
-    public Experience update(Long id, Experience experienceUpdates) {
+    public Experience update(Long id, ExperienceUpdateDTO experienceUpdates) {
         Experience existingExperience = experienceRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Experience not found"));
 
-        // Update experience fields
+        // Update only fields that are provided
         if (experienceUpdates.getTitle() != null) {
             existingExperience.setTitle(experienceUpdates.getTitle());
         }

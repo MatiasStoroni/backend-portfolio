@@ -1,5 +1,7 @@
 package com.matias.backend_portfolio.dtos;
 
+import java.util.List;
+
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,12 +10,18 @@ import lombok.Setter;
 @Setter
 public class ExperienceUpdateDTO {
 
-    @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
-    private String name;
+    @Size(min = 2, max = 100)
+    private String title;
 
-    @Size(min = 5, max = 100, message = "Degree should be beween 5 and 100 characters")
-    private String degree;
+    @Size(min = 2, max = 100)
+    private String company;
 
-    @Size(min = 5, max = 5000, message = "Description should be beween 5 and 5000 characters")
-    private String description;
+    @Size(min = 2, max = 50)
+    private String period;
+
+    @Size(max = 6, message = "Responsibilities cannot have more than 6 items")
+    private List<String> responsibilities;
+
+    @Size(max = 10, message = "Tools cannot have more than 10 items")
+    private List<String> tools;
 }

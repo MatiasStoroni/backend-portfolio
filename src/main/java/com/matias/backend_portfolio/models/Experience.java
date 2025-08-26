@@ -44,11 +44,13 @@ public class Experience {
     @NotNull(message = "Period field is missing")
     private String period;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 2000)
+    @Size(max = 6, message = "Responsibilities cannot have more than 6 items")
     @Convert(converter = ListToJsonConverter.class)
     private List<String> responsibilities;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 1000) // Increase length for JSON overhead
+    @Size(max = 10, message = "Tools cannot have more than 10 items")
     @Convert(converter = ListToJsonConverter.class)
     private List<String> tools;
 
